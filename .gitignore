@@ -1,4 +1,4 @@
 /bin/
 /target/
-/pom.xml
-/pom.xml.asc
+/pom.*
+/.lein*
