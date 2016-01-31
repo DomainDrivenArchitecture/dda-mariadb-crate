@@ -42,6 +42,25 @@
   (actions/package "mysql-server")
 )
 
+
+(defn install-mysql-java-connector
+  [& {:keys [connector-directory
+             link-directory]}]
+  (actions/remote-directory
+    connector-directory
+    :url "http://cdn.mysql.com/Downloads/Connector-J/mysql-connector-java-5.1.38.tar.gz"
+    :unpack :tar
+    :recursive true
+    :mode "660"
+    :owner "root" 
+    :group "root")
+  (actions/symbolic-link
+    (str connector-directory "/mysql-connector-java-5.1.38/mysql-connector-java-5.1.38-bin.jar")
+    (str link-directory "/mysql-connector-java-5.1.38-bin.jar")
+    :action :create)
+  )
+
+
 (defn- mysql-script*
   [db-user-name db-passwd sql-script]
   (stevedore/script
