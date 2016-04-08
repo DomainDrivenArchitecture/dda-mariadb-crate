@@ -18,12 +18,20 @@
 
 (ns org.domaindrivenarchitecture.pallet.crate.mysql
   (:require
+    [schema.core :as s :include-macros true]
     [clojure.string :as string]
     [pallet.stevedore :as stevedore]
     [pallet.actions :as actions]
     [pallet.api :as api]
     [pallet.crate :as crate]
 ))
+
+(def DbConfig
+  "Represents the database configuration."
+  {:root-passwd s/Str
+   :db-name s/Str
+   :user-name s/Str
+   :user-passwd s/Str})
 
 (defn install-mysql
   [& {:keys [db-root-password 
