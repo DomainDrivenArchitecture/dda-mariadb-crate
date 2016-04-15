@@ -1,4 +1,4 @@
-(defproject org.domaindrivenarchitecture/dda-mysql-crate "0.1.1"
+(defproject org.domaindrivenarchitecture/dda-mysql-crate "0.1.2-SNAPSHOT"
   :description "Iptables crate from the DomainDrivenArchitecture pallet project"
   :url "https://www.domaindrivenarchitecture.org"
   :license {:name "Apache License, Version 2.0"
