@@ -3,7 +3,7 @@
   :url "https://www.domaindrivenarchitecture.org"
   :license {:name "Apache License, Version 2.0"
              :url "https://www.apache.org/licenses/LICENSE-2.0.html"}
-  :dependencies [[prismatic/schema "1.1.1"]
+  :dependencies [[prismatic/schema "1.1.2"]
                  [metosin/schema-tools "0.9.0"]
                  [org.clojure/clojure "1.7.0"]
                  [com.palletops/pallet "0.8.12"]]
@@ -12,6 +12,7 @@
   :deploy-repositories [["snapshots" :clojars]
                         ["releases" :clojars]]
   :pallet {:source-paths ["src"]}
+  :plugins [[lein-sub "0.3.0"]]
   :profiles {:dev
              {:dependencies
               [[com.palletops/pallet "0.8.12" :classifier "tests"]
