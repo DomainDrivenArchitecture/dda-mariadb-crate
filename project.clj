@@ -1,9 +1,9 @@
-(defproject org.domaindrivenarchitecture/dda-mysql-crate "0.1.3-SNAPSHOT"
+(defproject org.domaindrivenarchitecture/dda-mysql-crate "0.1.3"
   :description "Iptables crate from the DomainDrivenArchitecture pallet project"
   :url "https://www.domaindrivenarchitecture.org"
   :license {:name "Apache License, Version 2.0"
              :url "https://www.apache.org/licenses/LICENSE-2.0.html"}
-  :dependencies [[prismatic/schema "1.1.2"]
+  :dependencies [[prismatic/schema "1.1.3"]
                  [metosin/schema-tools "0.9.0"]
                  [org.clojure/clojure "1.7.0"]
                  [com.palletops/pallet "0.8.12"]]
