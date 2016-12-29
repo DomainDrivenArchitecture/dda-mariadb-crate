@@ -4,7 +4,6 @@
   :license {:name "Apache License, Version 2.0"
              :url "https://www.apache.org/licenses/LICENSE-2.0.html"}
   :dependencies [[prismatic/schema "1.1.3"]
-                 [metosin/schema-tools "0.9.0"]
                  [org.clojure/clojure "1.7.0"]
                  [com.palletops/pallet "0.8.12"]]
   :repositories [["snapshots" :clojars]
@@ -19,7 +18,7 @@
               :plugins
               [[lein-sub "0.3.0"]]}
               :leiningen/reply
-               {:dependencies [[org.slf4j/jcl-over-slf4j "1.7.21"]]
+               {:dependencies [[org.slf4j/jcl-over-slf4j "1.7.22"]]
                 :exclusions [commons-logging]}}
   :local-repo-classpath true
   :classifiers {:tests {:source-paths ^:replace ["test"]
