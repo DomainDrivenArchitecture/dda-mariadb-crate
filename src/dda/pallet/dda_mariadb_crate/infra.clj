@@ -19,58 +19,37 @@
 (ns dda.pallet.dda-mariadb-crate.infra
   (:require
     [schema.core :as s]
-    [clojure.string :as string]
-    [pallet.stevedore :as stevedore]
     [pallet.actions :as actions]
-    [pallet.crate :as crate]
-    [dda.pallet.core.dda-crate :as dda-crate]))
+    [dda.pallet.core.dda-crate :as dda-crate]
+    [dda.pallet.dda-mariadb-crate.infra.maria-db :as maria]))
 
 (def facility :dda-mariadb)
 (def version  [0 2 0])
 
 (def DbConfig
   "Represents the database configuration."
+  {:db-name s/Str
+   :db-user-name s/Str
+   :db-user-passwd s/Str})
+
+(def ServerConfig
+  "Represents the database configuration."
   {:root-passwd s/Str
-   :db-name s/Str
-   :user-name s/Str
-   :user-passwd s/Str})
+   (s/optional-key :start-on-boot) s/Bool
+   :db [DbConfig]})
 
 (def AppConfigElement
-  {facility DbConfig})
+  {facility ServerConfig})
 
-(defn install-mariadb
-  [& {:keys [db-root-password
-             start-on-boot]
-      :or {db-root-password "test1234"
-           start-on-boot true}}]
-  (actions/debconf-set-selections {:package "mariadb-server"
-                                   :question "mariadb-server/root_password"
-                                   :type "password" :value db-root-password})
-  (actions/debconf-set-selections {:package "mariadb-server"
-                                   :question "mariadb-server/root_password_again"
-                                   :type "password" :value db-root-password})
-  (actions/debconf-set-selections {:package "mariadb-server"
-                                   :question "mariadb-server/start_on_boot"
-                                   :type "boolean" :value start-on-boot})
-  (actions/package "mariadb-server"))
+(defn init
+  "init package management"
+  []
+  (actions/package-manager :update))
 
-
-
-(defn install-mysql-java-connector
-  [& {:keys [connector-directory
-             link-directory]}]
-  (actions/remote-directory
-    connector-directory
-    :url "http://cdn.mysql.com/Downloads/Connector-J/mysql-connector-java-5.1.38.tar.gz"
-    :unpack :tar
-    :recursive true
-    :mode "660"
-    :owner "root"
-    :group "root")
-  (actions/symbolic-link
-    (str connector-directory "/mysql-connector-java-5.1.38/mysql-connector-java-5.1.38-bin.jar")
-    (str link-directory "/mysql-connector-java-5.1.38-bin.jar")
-    :action :create))
+(s/defmethod dda-crate/dda-init facility
+  [dda-crate config]
+  "dda mariadb: init routine"
+    (init))
 
 (s/defmethod dda-crate/dda-configure facility
   [dda-crate config]
@@ -78,7 +57,9 @@
 
 (s/defmethod dda-crate/dda-install facility
   [dda-crate config]
-  "dda-mariadb: install routine")
+  "dda-mariadb: install routine"
+  (let [{:keys [root-passwd start-on-boot] :or {start-on-boot true}} config]
+    (maria/install-mariadb root-passwd start-on-boot)))
 
 (def dda-mariadb-crate
   (dda-crate/make-dda-crate

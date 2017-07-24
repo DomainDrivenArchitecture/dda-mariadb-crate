@@ -1,4 +1,5 @@
-/bin/
 /target/
+/logs/
 /pom.*
 /.lein*
+/.nrepl-port

@@ -27,4 +27,7 @@
   [domain-config :- DomainConfig]
   (let [{:keys []} domain-config]
     {infra/facility
-      {}}))
+      {:root-passwd "test1234"
+       :db [{:db-name "test-db"
+             :db-user-name "superuser"
+             :db-user-passwd "secret"}]}}))

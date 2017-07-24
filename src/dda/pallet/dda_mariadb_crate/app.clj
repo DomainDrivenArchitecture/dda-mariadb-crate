@@ -17,7 +17,7 @@
 (ns dda.pallet.dda-mariadb-crate.app
   (:require
     [schema.core :as s]
-    [dda.cm.group :as group]    
+    [dda.cm.group :as group]
     [dda.pallet.dda-config-crate.infra :as config-crate]
     [dda.pallet.dda-mariadb-crate.infra :as infra]
     [dda.pallet.dda-mariadb-crate.domain :as domain]))
@@ -27,7 +27,7 @@
    {s/Keyword infra/AppConfigElement}})
 
 (s/defn ^:allways-validate create-app-configuration :- AppConfig
-  [config :- infra/DbConfig
+  [config :- infra/ServerConfig
    group-key :- s/Keyword]
   {:group-specific-config
      {group-key config}})
