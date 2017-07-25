@@ -38,12 +38,11 @@
 
 
 
-(defn install-mysql-java-connector
-  [& {:keys [connector-directory
-             link-directory]}]
+(defn install-java-connector
+  [connector-directory download-url]
   (actions/remote-directory
     connector-directory
-    :url "https://downloads.mariadb.com/Connectors/java/connector-java-2.0.3/mariadb-java-client-2.0.3.jar"
+    :url 
     :mode "660"
     :owner "root"
     :group "root"))

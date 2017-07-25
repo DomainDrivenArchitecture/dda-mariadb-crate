@@ -21,7 +21,8 @@
     [schema.core :as s]
     [pallet.actions :as actions]
     [dda.pallet.core.dda-crate :as dda-crate]
-    [dda.pallet.dda-mariadb-crate.infra.maria-db :as maria]))
+    [dda.pallet.dda-mariadb-crate.infra.maria-db :as maria]
+    [dda.pallet.dda-mariadb-crate.infra.script :as script]))
 
 (def facility :dda-mariadb)
 (def version  [0 2 0])
@@ -35,8 +36,11 @@
 (def ServerConfig
   "Represents the database configuration."
   {:root-passwd s/Str
-   (s/optional-key :start-on-boot) s/Bool
-   :db [DbConfig]})
+   :db-type (s/enum :maria :mysql)
+   :settings (hash-set (s/enum :start-on-boot))
+   :db [DbConfig]
+   (s/optional-key :java-connector) {:connector-directory s/Str
+                                     :download-url s/Str}})
 
 (def AppConfigElement
   {facility ServerConfig})
@@ -51,15 +55,25 @@
   "dda mariadb: init routine"
     (init))
 
-(s/defmethod dda-crate/dda-configure facility
-  [dda-crate config]
-  "dda-mariadb: configure")
-
 (s/defmethod dda-crate/dda-install facility
   [dda-crate config]
   "dda-mariadb: install routine"
-  (let [{:keys [root-passwd start-on-boot] :or {start-on-boot true}} config]
-    (maria/install-mariadb root-passwd start-on-boot)))
+  (let [{:keys [root-passwd java-connector settings db]} config
+        {:keys [start-on-boot]
+         :or {start-on-boot true}} settings]
+    (maria/install-mariadb root-passwd start-on-boot)
+    (when (contains? config :java-connector)
+      (let [{:keys [connector-directory download-url]} java-connector]
+        (maria/install-java-connector connector-directory download-url)))
+    (when (contains? config :db)
+      (doseq [db-config db]
+        (let [{:keys [db-name db-user-name db-user-passwd]} db-config]
+          (script/init-database
+           "root" root-passwd db-name db-user-name db-user-passwd))))))
+
+(s/defmethod dda-crate/dda-configure facility
+  [dda-crate config]
+  "dda-mariadb: configure")
 
 (def dda-mariadb-crate
   (dda-crate/make-dda-crate

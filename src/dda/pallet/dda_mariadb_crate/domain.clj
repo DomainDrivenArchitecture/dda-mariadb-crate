@@ -23,11 +23,16 @@
 
 (def DomainConfig {})
 
+(def JavaConnector {:connector-directory "/var/lib/maria-db"
+                    :download-url "https://downloads.mariadb.com/Connectors/java/connector-java-2.0.3/mariadb-java-client-2.0.3.jar"})
+
 (s/defn ^:always-validate infra-configuration :- infra/AppConfigElement
   [domain-config :- DomainConfig]
   (let [{:keys []} domain-config]
     {infra/facility
       {:root-passwd "test1234"
+       :settings #{}
+       :db-type :maria
        :db [{:db-name "test-db"
-             :db-user-name "superuser"
+             :db-user-name "db-user"
              :db-user-passwd "secret"}]}}))
