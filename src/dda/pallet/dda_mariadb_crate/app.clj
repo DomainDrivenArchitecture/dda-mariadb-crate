@@ -22,9 +22,11 @@
     [dda.pallet.dda-mariadb-crate.infra :as infra]
     [dda.pallet.dda-mariadb-crate.domain :as domain]))
 
+(def InfraResult infra/InfraResult)
+
 (def AppConfig
   {:group-specific-config
-   {s/Keyword infra/AppConfigElement}})
+   {s/Keyword InfraResult}})
 
 (s/defn ^:allways-validate create-app-configuration :- AppConfig
   [config :- infra/ServerConfig

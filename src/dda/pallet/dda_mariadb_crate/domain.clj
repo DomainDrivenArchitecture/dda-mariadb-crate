@@ -21,18 +21,27 @@
     [schema.core :as s]
     [dda.pallet.dda-mariadb-crate.infra :as infra]))
 
-(def DomainConfig {})
+(def DbConfig
+  "Represents the database configuration."
+  {:db-name s/Str
+   :db-user-name s/Str
+   :db-user-passwd s/Str})
 
+(def DomainConfig
+  "Represents the database configuration."
+  {:root-passwd s/Str
+   :settings (hash-set (s/enum :with-java-connector))
+   :db [DbConfig]})
+
+;TODO: make java connector operable
 (def JavaConnector {:connector-directory "/var/lib/maria-db"
                     :download-url "https://downloads.mariadb.com/Connectors/java/connector-java-2.0.3/mariadb-java-client-2.0.3.jar"})
 
-(s/defn ^:always-validate infra-configuration :- infra/AppConfigElement
+(s/defn ^:always-validate infra-configuration :- infra/InfraResult
   [domain-config :- DomainConfig]
-  (let [{:keys []} domain-config]
+  (let [{:keys [root-passwd db]} domain-config]
     {infra/facility
-      {:root-passwd "test1234"
-       :settings #{}
+      {:root-passwd root-passwd
+       :settings #{:start-on-boot}
        :db-type :maria
-       :db [{:db-name "test-db"
-             :db-user-name "db-user"
-             :db-user-passwd "secret"}]}}))
+       :db db}}))

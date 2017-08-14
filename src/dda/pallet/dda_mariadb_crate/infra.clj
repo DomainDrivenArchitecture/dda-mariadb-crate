@@ -42,7 +42,7 @@
    (s/optional-key :java-connector) {:connector-directory s/Str
                                      :download-url s/Str}})
 
-(def AppConfigElement
+(def InfraResult
   {facility ServerConfig})
 
 (defn init
