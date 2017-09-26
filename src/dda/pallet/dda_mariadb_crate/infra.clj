@@ -38,7 +38,8 @@
   {:root-passwd s/Str
    :db-type (s/enum :maria :mysql)
    :settings (hash-set (s/enum :start-on-boot))
-   :db [DbConfig]
+   (s/optional-key :db) [DbConfig]
+   (s/optional-key :user) []
    (s/optional-key :java-connector) {:connector-directory s/Str
                                      :download-url s/Str}})
 
@@ -53,7 +54,7 @@
 (s/defmethod dda-crate/dda-init facility
   [dda-crate config]
   "dda mariadb: init routine"
-    (init))
+  (init))
 
 (s/defmethod dda-crate/dda-install facility
   [dda-crate config]
