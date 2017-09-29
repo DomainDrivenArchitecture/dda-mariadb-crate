@@ -1,4 +1,4 @@
-(defproject dda/dda-mariadb-crate "0.2.0-SNAPSHOT"
+(defproject dda/dda-mariadb-crate "0.2.0"
   :description "mariadb crate of dda-pallet project"
   :url "https://www.domaindrivenarchitecture.org"
   :license {:name "Apache License, Version 2.0"
@@ -6,7 +6,7 @@
   :dependencies [[org.clojure/clojure "1.7.0"]
                  [prismatic/schema "1.1.6"]
                  [com.palletops/pallet "0.8.12"]
-                 [dda/dda-pallet "0.5.2"]]
+                 [dda/dda-pallet "0.5.4"]]
   :repositories [["snapshots" :clojars]
                  ["releases" :clojars]]
   :deploy-repositories [["snapshots" :clojars]
@@ -16,8 +16,8 @@
                    :dependencies
                     [[org.domaindrivenarchitecture/pallet-aws "0.2.8.2"]
                      [com.palletops/pallet "0.8.12" :classifier "tests"]
-                     [dda/dda-config-commons "0.2.0"]
-                     [dda/dda-serverspec-crate "0.2.0"]
+                     [dda/dda-config-commons "0.2.2"]
+                     [dda/dda-serverspec-crate "0.2.1"]
                      [ch.qos.logback/logback-classic "1.2.3"]
                      [org.slf4j/jcl-over-slf4j "1.7.25"]]
                     :plugins
