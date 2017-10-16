@@ -4,9 +4,7 @@
   :license {:name "Apache License, Version 2.0"
              :url "https://www.apache.org/licenses/LICENSE-2.0.html"}
   :dependencies [[org.clojure/clojure "1.7.0"]
-                 [prismatic/schema "1.1.6"]
-                 [com.palletops/pallet "0.8.12"]
-                 [dda/dda-pallet "0.5.4"]]
+                 [dda/dda-pallet "0.5.5-SNAPSHOT"]]
   :repositories [["snapshots" :clojars]
                  ["releases" :clojars]]
   :deploy-repositories [["snapshots" :clojars]
@@ -16,10 +14,9 @@
                    :dependencies
                     [[org.domaindrivenarchitecture/pallet-aws "0.2.8.2"]
                      [com.palletops/pallet "0.8.12" :classifier "tests"]
-                     [dda/dda-config-commons "0.2.2"]
-                     [dda/dda-serverspec-crate "0.2.1"]
+                     [dda/dda-serverspec-crate "0.2.2-SNAPSHOT"]
                      [ch.qos.logback/logback-classic "1.2.3"]
-                     [org.slf4j/jcl-over-slf4j "1.7.25"]]
+                     [org.slf4j/jcl-over-slf4j "1.8.0-alpha2"]]
                     :plugins
                     [[lein-sub "0.3.0"]]
                     :leiningen/reply
