@@ -26,7 +26,11 @@
     [dda.pallet.dda-mariadb-crate.app :as app]))
 
 (def domain-config
-  {})
+  {:db [{:db-user-passwd "xxxx",
+         :db-name "db",
+         :db-user-name "user",}]
+   :settings #{},
+   :root-passwd "xxxx",})
 
 (defn provisioning-spec [count]
   (merge
@@ -35,17 +39,37 @@
     {:count count}))
 
 (defn converge-install
-  ([count]
-   (pr/session-summary
-    (operation/do-converge-install (cloud-target/provider) (provisioning-spec count))))
-  ([key-id key-passphrase count]
-   (pr/session-summary
-    (operation/do-converge-install (cloud-target/provider key-id key-passphrase) (provisioning-spec count)))))
+  [count & options]
+  (let [{:keys [gpg-key-id gpg-passphrase
+                summarize-session]
+         :or {summarize-session true}} options]
+   (operation/do-converge-install
+     (if (some? gpg-key-id)
+       (cloud-target/provider gpg-key-id gpg-passphrase)
+       (cloud-target/provider))
+     (provisioning-spec count)
+     :summarize-session summarize-session)))
 
-(defn server-test
-  ([count]
-   (pr/session-summary
-    (operation/do-server-test (cloud-target/provider) (provisioning-spec count))))
-  ([key-id key-passphrase count]
-   (pr/session-summary
-    (operation/do-server-test (cloud-target/provider key-id key-passphrase) (provisioning-spec count)))))
+(defn configure
+ [& options]
+ (let [{:keys [gpg-key-id gpg-passphrase
+               summarize-session]
+        :or {summarize-session true}} options]
+  (operation/do-apply-configure
+    (if (some? gpg-key-id)
+      (cloud-target/provider gpg-key-id gpg-passphrase)
+      (cloud-target/provider))
+    (provisioning-spec 0)
+    :summarize-session summarize-session)))
+
+(defn serverspec
+  [& options]
+  (let [{:keys [gpg-key-id gpg-passphrase
+                summarize-session]
+         :or {summarize-session true}} options]
+   (operation/do-server-test
+     (if (some? gpg-key-id)
+       (cloud-target/provider gpg-key-id gpg-passphrase)
+       (cloud-target/provider))
+     (provisioning-spec 0)
+     :summarize-session summarize-session)))

@@ -28,19 +28,14 @@
   {:group-specific-config
    {s/Keyword InfraResult}})
 
-(s/defn ^:always-validate create-app-configuration :- AppConfig
-  [config :- infra/ServerConfig
-   group-key :- s/Keyword]
-  {:group-specific-config
-     {group-key config}})
-
 (def with-mariadb infra/with-mariadb)
 
-(defn app-configuration
- [domain-config & {:keys [group-key] :or {group-key :dda-mariadb-group}}]
- (s/validate domain/DomainConfig domain-config)
- (create-app-configuration (domain/infra-configuration domain-config)
-                           group-key))
+(s/defn ^:always-validate app-configuration :- AppConfig
+  [domain-config :- domain/DomainConfig
+   & options]
+  (let [{:keys [group-key] :or {group-key infra/facility}} options]
+    {:group-specific-config
+     {group-key (domain/infra-configuration domain-config)}}))
 
 (s/defn ^:always-validate mariadb-group-spec
  [app-config :- AppConfig]
