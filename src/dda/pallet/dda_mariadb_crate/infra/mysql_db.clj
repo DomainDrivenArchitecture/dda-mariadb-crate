@@ -23,7 +23,7 @@
     [pallet.stevedore :as stevedore]
     [pallet.actions :as actions]))
 
-(defn install-mariadb
+(defn install-mysqldb
   [root-password start-on-boot]
   (actions/debconf-set-selections {:package "mysqldb-server"
                                    :question "mysqldb-server/root_password"

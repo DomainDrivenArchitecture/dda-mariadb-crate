@@ -21,6 +21,7 @@
     [schema.core :as s]
     [pallet.actions :as actions]
     [dda.pallet.core.dda-crate :as dda-crate]
+    [dda.pallet.dda-mariadb-crate.infra.mysql-db :as mysql]
     [dda.pallet.dda-mariadb-crate.infra.maria-db :as maria]
     [dda.pallet.dda-mariadb-crate.infra.script :as script]))
 
@@ -59,10 +60,12 @@
 (s/defmethod dda-crate/dda-install facility
   [dda-crate config]
   "dda-mariadb: install routine"
-  (let [{:keys [root-passwd java-connector settings db]} config
+  (let [{:keys [root-passwd java-connector settings db db-type]} config
         {:keys [start-on-boot]
          :or {start-on-boot true}} settings]
-    (maria/install-mariadb root-passwd start-on-boot)
+    (if (= :mysql db-type)
+      (mysql/install-mysqldb root-passwd start-on-boot)
+      (maria/install-mariadb root-passwd start-on-boot))
     (when (contains? config :java-connector)
       (let [{:keys [connector-directory download-url]} java-connector]
         (maria/install-java-connector connector-directory download-url)))

@@ -28,7 +28,7 @@
   {:group-specific-config
    {s/Keyword InfraResult}})
 
-(s/defn ^:allways-validate create-app-configuration :- AppConfig
+(s/defn ^:always-validate create-app-configuration :- AppConfig
   [config :- infra/ServerConfig
    group-key :- s/Keyword]
   {:group-specific-config

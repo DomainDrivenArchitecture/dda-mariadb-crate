@@ -21,8 +21,8 @@
     [dda.pallet.commons.encrypted-credentials :as crypto]
     [dda.pallet.commons.session-tools :as session-tools]
     [dda.pallet.commons.pallet-schema :as ps]
-    [dda.cm.operation :as operation]
-    [dda.cm.aws :as cloud-target]
+    [dda.pallet.commons.operation :as operation]
+    [dda.pallet.commons.aws :as cloud-target]
     [dda.pallet.dda-mariadb-crate.app :as app]))
 
 (def domain-config
