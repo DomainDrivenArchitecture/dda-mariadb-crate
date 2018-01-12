@@ -26,7 +26,8 @@
   "Represents the database configuration."
   {:db-name s/Str
    :db-user-name s/Str
-   :db-user-passwd secret/Secret})
+   :db-user-passwd secret/Secret
+   (s/optional-key :create-options) s/Str})
 
 (def DomainConfig
   "Represents the database configuration."

@@ -92,11 +92,12 @@ users are defined at localhost."
       (format "GRANT %s ON %s TO %s" grant-privileges grant-level db-user-name))))
 
 (defn init-database
-  [superuser-name superuser-passwd db-name db-user-name db-user-passwd]
+  [superuser-name superuser-passwd db-name db-user-name db-user-passwd create-options]
   (create-database
     :user-name superuser-name
     :user-passwd superuser-passwd
-    :db-name db-name)
+    :db-name db-name
+    :create-options create-options)
   (grant
     :user-name superuser-name
     :user-passwd superuser-passwd

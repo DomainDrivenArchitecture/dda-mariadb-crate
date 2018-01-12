@@ -1,5 +1,6 @@
 {:db [{:db-user-passwd {:plain "xxxx"}
        :db-name "db",
-       :db-user-name "user",}]
+       :db-user-name "user",
+       :create-options "character set utf8"}]
  :settings #{},
  :root-passwd {:plain "xxxx"}}
