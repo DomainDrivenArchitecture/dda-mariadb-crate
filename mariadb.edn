@@ -1,0 +1,5 @@
+{:db [{:db-user-passwd {:plain "xxxx"}
+       :db-name "db",
+       :db-user-name "user",}]
+ :settings #{},
+ :root-passwd {:plain "xxxx"}}

@@ -18,9 +18,14 @@
   (:require
     [schema.core :as s]
     [dda.cm.group :as group]
+    [dda.pallet.commons.secret :as secret]
+    [dda.pallet.commons.existing :as existing]
+    [dda.pallet.commons.external-config :as ext-config]
     [dda.pallet.dda-config-crate.infra :as config-crate]
     [dda.pallet.dda-mariadb-crate.infra :as infra]
     [dda.pallet.dda-mariadb-crate.domain :as domain]))
+
+(def with-mariadb infra/with-mariadb)
 
 (def InfraResult infra/InfraResult)
 
@@ -28,14 +33,30 @@
   {:group-specific-config
    {s/Keyword InfraResult}})
 
-(def with-mariadb infra/with-mariadb)
+(s/defn ^:always-validate
+  load-targets :- existing/Targets
+  [file-name :- s/Str]
+  (existing/load-targets file-name))
 
-(s/defn ^:always-validate app-configuration :- AppConfig
-  [domain-config :- domain/DomainConfig
+(s/defn ^:always-validate
+  load-domain :- domain/DomainConfig
+  [file-name :- s/Str]
+  (ext-config/parse-config file-name))
+
+(s/defn ^:always-validate
+  app-configuration-resolved :- AppConfig
+  [domain-config :- domain/DomainConfigResolved
    & options]
   (let [{:keys [group-key] :or {group-key infra/facility}} options]
     {:group-specific-config
      {group-key (domain/infra-configuration domain-config)}}))
+
+(s/defn ^:always-validate
+  app-configuration :- AppConfig
+  [domain-config :- domain/DomainConfig
+   & options]
+  (let [resolved-domain-config (secret/resolve-secrets domain-config domain/DomainConfig)]
+    (apply app-configuration-resolved resolved-domain-config options)))
 
 (s/defn ^:always-validate mariadb-group-spec
  [app-config :- AppConfig]
