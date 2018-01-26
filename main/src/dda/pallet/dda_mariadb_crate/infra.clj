@@ -32,7 +32,8 @@
   "Represents the database configuration."
   {:db-name s/Str
    :db-user-name s/Str
-   :db-user-passwd s/Str})
+   :db-user-passwd s/Str
+   (s/optional-key :create-options) s/Str})
 
 (def ServerConfig
   "Represents the database configuration."
@@ -71,9 +72,10 @@
         (maria/install-java-connector connector-directory download-url)))
     (when (contains? config :db)
       (doseq [db-config db]
-        (let [{:keys [db-name db-user-name db-user-passwd]} db-config]
+        (let [{:keys [db-name db-user-name db-user-passwd create-options]
+               :or {create-options ""}} db-config]
           (script/init-database
-           "root" root-passwd db-name db-user-name db-user-passwd))))))
+           "root" root-passwd db-name db-user-name db-user-passwd create-options))))))
 
 (s/defmethod dda-crate/dda-configure facility
   [dda-crate config]
