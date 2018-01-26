@@ -1,4 +1,4 @@
-(defproject dda/dda-mariadb-crate "1.0.0-SNAPSHOT"
+(defproject dda/dda-mariadb-crate "1.0.0"
   :description "mariadb crate of dda-pallet project"
   :url "https://www.domaindrivenarchitecture.org"
   :license {:name "Apache License, Version 2.0"
