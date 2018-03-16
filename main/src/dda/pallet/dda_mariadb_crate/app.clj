@@ -17,10 +17,8 @@
 (ns dda.pallet.dda-mariadb-crate.app
   (:require
     [schema.core :as s]
-    [dda.cm.group :as group]
     [dda.pallet.commons.secret :as secret]
-    [dda.pallet.commons.existing :as existing]
-    [dda.pallet.commons.external-config :as ext-config]
+    [dda.pallet.core.app :as core-app]
     [dda.pallet.dda-config-crate.infra :as config-crate]
     [dda.pallet.dda-mariadb-crate.infra :as infra]
     [dda.pallet.dda-mariadb-crate.domain :as domain]))
@@ -29,37 +27,40 @@
 
 (def InfraResult infra/InfraResult)
 
+(def MariaDomainConfig domain/DomainConfig)
+
+(def MariaDomainConfigResolved domain/DomainConfigResolved)
+
 (def AppConfig
   {:group-specific-config
    {s/Keyword InfraResult}})
 
 (s/defn ^:always-validate
-  load-targets :- existing/Targets
-  [file-name :- s/Str]
-  (existing/load-targets file-name))
-
-(s/defn ^:always-validate
-  load-domain :- domain/DomainConfig
-  [file-name :- s/Str]
-  (ext-config/parse-config file-name))
-
-(s/defn ^:always-validate
   app-configuration-resolved :- AppConfig
-  [domain-config :- domain/DomainConfigResolved
+  [resolved-domain-config :- MariaDomainConfigResolved
    & options]
   (let [{:keys [group-key] :or {group-key infra/facility}} options]
     {:group-specific-config
-     {group-key (domain/infra-configuration domain-config)}}))
+     {group-key (domain/infra-configuration resolved-domain-config)}}))
 
 (s/defn ^:always-validate
   app-configuration :- AppConfig
-  [domain-config :- domain/DomainConfig
+  [domain-config :- MariaDomainConfig
    & options]
   (let [resolved-domain-config (secret/resolve-secrets domain-config domain/DomainConfig)]
     (apply app-configuration-resolved resolved-domain-config options)))
 
-(s/defn ^:always-validate mariadb-group-spec
- [app-config :- AppConfig]
- (group/group-spec
-   app-config [(config-crate/with-config app-config)
-               with-mariadb]))
+(s/defmethod ^:always-validate
+  core-app/group-spec infra/facility
+  [crate-app
+   domain-config :- domain/DomainConfigResolved]
+  (let [app-config (app-configuration-resolved domain-config)]
+    (core-app/pallet-group-spec
+     app-config [(config-crate/with-config app-config)
+                 with-mariadb])))
+
+(def crate-app (core-app/make-dda-crate-app
+                  :facility infra/facility
+                  :domain-schema MariaDomainConfig
+                  :domain-schema-resolved MariaDomainConfigResolved
+                  :default-domain-file "mariadb.edn"))

@@ -20,13 +20,12 @@
   (:require
     [schema.core :as s]
     [pallet.actions :as actions]
-    [dda.pallet.core.dda-crate :as dda-crate]
+    [dda.pallet.core.infra :as core-infra]
     [dda.pallet.dda-mariadb-crate.infra.mysql-db :as mysql]
     [dda.pallet.dda-mariadb-crate.infra.maria-db :as maria]
     [dda.pallet.dda-mariadb-crate.infra.script :as script]))
 
 (def facility :dda-mariadb)
-(def version  [0 2 0])
 
 (def DbConfig
   "Represents the database configuration."
@@ -53,13 +52,13 @@
   []
   (actions/package-manager :update))
 
-(s/defmethod dda-crate/dda-init facility
-  [dda-crate config]
+(s/defmethod core-infra/dda-init facility
+  [core-infra config]
   "dda mariadb: init routine"
   (init))
 
-(s/defmethod dda-crate/dda-install facility
-  [dda-crate config]
+(s/defmethod core-infra/dda-install facility
+  [core-infra config]
   "dda-mariadb: install routine"
   (let [{:keys [root-passwd java-connector settings db db-type]} config
         {:keys [start-on-boot]
@@ -77,14 +76,14 @@
           (script/init-database
            "root" root-passwd db-name db-user-name db-user-passwd create-options))))))
 
-(s/defmethod dda-crate/dda-configure facility
-  [dda-crate config]
+(s/defmethod core-infra/dda-configure facility
+  [core-infra config]
   "dda-mariadb: configure")
 
 (def dda-mariadb-crate
-  (dda-crate/make-dda-crate
+  (core-infra/make-dda-crate-infra
    :facility facility
-   :version version))
+   :infra-schema ServerConfig))
 
 (def with-mariadb
-  (dda-crate/create-server-spec dda-mariadb-crate))
+  (core-infra/create-infra-plan dda-mariadb-crate))

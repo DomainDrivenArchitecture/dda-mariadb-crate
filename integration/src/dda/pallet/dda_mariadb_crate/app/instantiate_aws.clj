@@ -17,48 +17,35 @@
   (:require
     [pallet.repl :as pr]
     [clojure.inspector :as inspector]
-    [dda.pallet.commons.operation :as operation]
-    [dda.pallet.commons.aws :as cloud-target]
+    [dda.pallet.core.app :as core-app]
     [dda.pallet.dda-mariadb-crate.app :as app]))
-
-(defn provisioning-spec [domain-config target-config count]
-  (merge
-    (app/mariadb-group-spec (app/app-configuration domain-config))
-    (cloud-target/node-spec target-config)
-    {:count count}))
 
 (defn converge-install
   [count & options]
-  (let [{:keys [gpg-key-id gpg-passphrase domain target]
+  (let [{:keys [domain targets summarize-session]
          :or {domain "mariadb.edn"
-              target "integration/resources/jem-aws-target.edn"}} options
-        target-config (cloud-target/load-targets target)
-        domain-config (app/load-domain domain)]
-   (operation/do-converge-install
-     (cloud-target/provider (:context target-config))
-     (provisioning-spec domain-config (:node-spec target-config) count)
-     :summarize-session true)))
+              targets "integration/resources/jem-aws-target.edn"
+              summarize-session true}} options]
+    (core-app/aws-install app/crate-app count
+                          {:domain domain
+                           :targets targets})))
 
 (defn configure
  [& options]
- (let [{:keys [gpg-key-id gpg-passphrase domain target]
+ (let [{:keys [domain targets summarize-session]
         :or {domain "mariadb.edn"
-             target "integration/resources/jem-aws-target.edn"}} options
-       target-config (cloud-target/load-targets target)
-       domain-config (app/load-domain domain)]
-  (operation/do-apply-configure
-    (cloud-target/provider (:context target-config))
-    (provisioning-spec domain-config (:node-spec target-config) 0)
-    :summarize-session true)))
+             targets "integration/resources/jem-aws-target.edn"
+             summarize-session true}} options]
+  (core-app/aws-configure app/crate-app
+                          {:domain domain
+                           :targets targets})))
 
 (defn serverspec
   [& options]
-  (let [{:keys [gpg-key-id gpg-passphrase domain target]
+  (let [{:keys [domain targets summarize-session]
          :or {domain "mariadb.edn"
-              target "integration/resources/jem-aws-target.edn"}} options
-        target-config (cloud-target/load-targets target)
-        domain-config (app/load-domain domain)]
-   (operation/do-server-test
-     (cloud-target/provider (:context target-config))
-     (provisioning-spec domain-config (:node-spec target-config) 0)
-     :summarize-session true)))
+              targets "integration/resources/jem-aws-target.edn"
+              summarize-session true}} options]
+    (core-app/aws-serverspec app/crate-app
+                             {:domain domain
+                              :targets targets})))
