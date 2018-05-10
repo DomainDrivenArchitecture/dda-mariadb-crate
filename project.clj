@@ -1,10 +1,10 @@
-(defproject dda/dda-mariadb-crate "1.0.1-SNAPSHOT"
+(defproject dda/dda-mariadb-crate "1.0.1"
   :description "mariadb crate of dda-pallet project"
   :url "https://www.domaindrivenarchitecture.org"
   :license {:name "Apache License, Version 2.0"
              :url "https://www.apache.org/licenses/LICENSE-2.0.html"}
   :dependencies [[org.clojure/clojure "1.7.0"]
-                 [dda/dda-pallet "2.1.0-SNAPSHOT"]]
+                 [dda/dda-pallet "2.1.2"]]
   :source-paths ["main/src"]
   :resource-paths ["main/resources"]
   :repositories [["snapshots" :clojars]
@@ -35,5 +35,5 @@
                        :resource-paths ["uberjar/resources"]
                        :aot :all
                        :main dda.pallet.dda-mariadb-crate.main
-                       :dependencies [[org.clojure/tools.cli "0.3.5"]]}}
+                       :dependencies [[org.clojure/tools.cli "0.3.7"]]}}
   :local-repo-classpath true)
