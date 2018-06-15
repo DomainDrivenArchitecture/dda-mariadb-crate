@@ -1,0 +1,3 @@
+{:existing [{:node-name "test-mariadb"
+             :node-ip "159.69.38.22"}]
+ :provisioning-user {:login "root"}}
