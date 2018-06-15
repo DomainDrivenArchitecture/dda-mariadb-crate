@@ -1,10 +1,9 @@
-(defproject dda/dda-mariadb-crate "1.0.2"
+(defproject dda/dda-mariadb-crate "1.0.3"
   :description "mariadb crate of dda-pallet project"
   :url "https://www.domaindrivenarchitecture.org"
   :license {:name "Apache License, Version 2.0"
              :url "https://www.apache.org/licenses/LICENSE-2.0.html"}
-  :dependencies [[org.clojure/clojure "1.7.0"]
-                 [dda/dda-pallet "2.2.0"]]
+  :dependencies [[dda/dda-pallet "2.2.0"]]
   :source-paths ["main/src"]
   :resource-paths ["main/resources"]
   :repositories [["snapshots" :clojars]
